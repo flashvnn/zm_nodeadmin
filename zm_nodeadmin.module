@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * Extend Drupal node admin
+ */
+
+/**
+ * Implements hook_menu_alter().
+ */
+function zm_nodeadmin_menu_alter(&$items) {
+  if (isset($items['admin/content'])) {
+    $items['admin/content']['page callback'] = 'zm_node_admin_admin_page';
+    $items['admin/content']['page arguments'] = array();
+  }
+}
+
+function zm_node_admin_admin_page(){
+  if (isset($_GET['type'])) {
+    $type       = $_GET['type'];
+    $node_types = node_type_get_names();
+
+    if (isset($node_types[$type])) {
+      $session = isset($_SESSION['node_overview_filter']) ? $_SESSION['node_overview_filter'] : array();
+      if (empty($session)) {
+        $_SESSION['node_overview_filter'] = array(
+          array('type', $type),
+        );
+      }
+      else {
+        foreach ($session as $item) {
+          if ($item[0] == 'type' && $item[1] != $type) {
+            $_SESSION['node_overview_filter'] = array(
+              array('type', $type),
+            );
+          }
+        }
+
+      }
+    }
+  }
+
+  return drupal_get_form('node_admin_content');
+}

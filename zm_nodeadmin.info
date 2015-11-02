@@ -1,0 +1,7 @@
+name = ZM Node Aadmin
+description = Extend Drupal node admin
+core = 7.x
+version = 7.x-1.x
+
+;files[] =
+;dependencies[] = 
